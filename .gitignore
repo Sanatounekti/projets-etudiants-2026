@@ -45,3 +45,4 @@ app.*.map.json
 
 # Large ML dataset
 assets/models/dataset.csv
+.env

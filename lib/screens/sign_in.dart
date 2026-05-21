@@ -94,25 +94,17 @@ class _SignInState extends State<SignIn> {
             .doc(user.user!.email)
             .get();
         if (!a.exists) {
-          await FirebaseFirestore.instance
-              .collection('Users')
-              .doc(user.user!.email)
-              .set({
-            'name': user.user!.displayName,
-            'dob': null,
-            'gender': null,
-            'nic': null,
-            'address': null,
-            'mobile': null,
-            'role': 'personneAge',
-            'linkedFamilyEmails': [],
-            'pendingInvitations': [],
-            'linkedPatientsEmails': [],
-            'pendingPatientRequests': [],
-            'linkedDoctorEmails': [],
-            'pendingDoctorRequests': [],
-            'pendingDoctorInvitations': [],
-          });
+          await FirebaseAuth.instance.signOut();
+          if (mounted) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              const SnackBar(
+                content: Text('No account found. Please sign up first.'),
+                backgroundColor: Colors.orange,
+              ),
+            );
+            widget.showSignUpScreen?.call();
+          }
+          return;
         }
 
         if (mounted) {
@@ -232,24 +224,32 @@ class _SignInState extends State<SignIn> {
           setState(() {
             isLoading = false;
           });
-          // if (!mounted) {
-          //   return;
-          // }
 
-          // //pop loading cicle
-          // Navigator.of(context).pop();
-
-          // showDialog(
-          //   context: context,
-          //   builder: (context) {
-          //     return Alert_Dialog(
-          //       isError: true,
-          //       alertTitle: 'Error',
-          //       errorMessage: getErrorMessage(e.code),
-          //       buttonText: 'Cancel',
-          //     );
-          //   },
-          // );
+          if (e.code == 'user-not-found') {
+            if (mounted) {
+              final goToSignUp = await showDialog<bool>(
+                context: context,
+                builder: (ctx) => AlertDialog(
+                  title: const Text('Account not found'),
+                  content: const Text('No account found with this email. Create a new account?'),
+                  actions: [
+                    TextButton(
+                      onPressed: () => Navigator.pop(ctx, false),
+                      child: const Text('Cancel'),
+                    ),
+                    FilledButton(
+                      onPressed: () => Navigator.pop(ctx, true),
+                      child: const Text('Sign Up'),
+                    ),
+                  ],
+                ),
+              );
+              if (goToSignUp == true) {
+                widget.showSignUpScreen?.call();
+              }
+            }
+            return;
+          }
 
           setState(() {
             _isError = true;
@@ -350,9 +350,9 @@ class _SignInState extends State<SignIn> {
                       child: FilledButton.tonalIcon(
                         //sign in with google
                         // onPressed: () {},
-                        onPressed: () async {
+                         onPressed: () async {
                           setState(() {
-                            isLoadingGoogle = false;
+                            isLoadingGoogle = true;
                           });
                           try {
                             UserCredential user =
@@ -360,50 +360,39 @@ class _SignInState extends State<SignIn> {
                             String? userEmail = user.user!.email;
                             print('Email : $userEmail');
 
-                            setState(() {
-                              isLoadingGoogle = true;
-                            });
-
-                            try {
-                              var a = await FirebaseFirestore.instance
-                                  .collection('Users')
-                                  .doc(user.user!.email)
-                                  .get();
-                              if (a.exists) {
-                                print('Already Registered user');
-                              } else {
-                                print('New USER');
-                                await FirebaseFirestore.instance
-                                    .collection('Users')
-                                    .doc(userEmail)
-                                    .set(
-                                  {
-                                    'name': user.user!.displayName,
-                                    'dob': null,
-                                    'gender': null,
-                                    'nic': null,
-                                    'address': null,
-                                    'mobile': null,
-                                  },
+                            var a = await FirebaseFirestore.instance
+                                .collection('Users')
+                                .doc(userEmail)
+                                .get();
+                            if (!a.exists) {
+                              await FirebaseAuth.instance.signOut();
+                              if (mounted) {
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  const SnackBar(
+                                    content: Text('No account found. Please sign up first.'),
+                                    backgroundColor: Colors.orange,
+                                  ),
                                 );
+                                widget.showSignUpScreen?.call();
                               }
-                            } catch (e) {
-                              print(e);
+                              return;
+                            }
+
+                            await SharedPreferences.getInstance()
+                                .then((prefs) => prefs.setString('login_type', 'google'));
+
+                            if (mounted) {
+                              Navigator.of(context).pushReplacement(
+                                MaterialPageRoute(
+                                    builder: (context) => const MainPage()),
+                              );
                             }
                           } catch (e) {
                             print(e);
                           }
-
-                          // Save login type
-                          final prefs = await SharedPreferences.getInstance();
-                          await prefs.setString('login_type', 'google');
-
-                          if (mounted) {
-                            Navigator.of(context).pushReplacement(
-                              MaterialPageRoute(
-                                  builder: (context) => const MainPage()),
-                            );
-                          }
+                          setState(() {
+                            isLoadingGoogle = false;
+                          });
                         },
                         style: const ButtonStyle(
                           elevation: MaterialStatePropertyAll(2),

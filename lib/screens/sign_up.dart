@@ -4,9 +4,12 @@ import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:google_fonts/google_fonts.dart';
 
+import 'package:shared_preferences/shared_preferences.dart';
+
 import '../components/text_field.dart';
 import '../models/user_model.dart';
 import '../services/auth_service.dart';
+import '../auth/main_page.dart';
 
 class SignUp extends StatefulWidget {
   const SignUp({super.key, required this.showSignInScreen});
@@ -74,6 +77,71 @@ class _SignUpState extends State<SignUp> {
     } else {
       return false;
     }
+  }
+
+  Future<UserRole?> _showRoleSelectionDialog() async {
+    UserRole? selected;
+    await showDialog<UserRole>(
+      context: context,
+      builder: (ctx) {
+        return AlertDialog(
+          title: const Text('Select your role'),
+          content: StatefulBuilder(
+            builder: (context, setDialogState) {
+              return Column(
+                mainAxisSize: MainAxisSize.min,
+                children: UserRole.values.map((role) {
+                  String roleText;
+                  IconData roleIcon;
+                  switch (role) {
+                    case UserRole.personneAge:
+                      roleText = 'Personne agee (Patient)';
+                      roleIcon = Icons.elderly;
+                      break;
+                    case UserRole.membreFamille:
+                      roleText = 'Membre de famille';
+                      roleIcon = Icons.family_restroom;
+                      break;
+                    case UserRole.doctor:
+                      roleText = 'Medecin';
+                      roleIcon = Icons.medical_services;
+                      break;
+                  }
+                  return RadioListTile<UserRole>(
+                    value: role,
+                    groupValue: selected,
+                    title: Row(
+                      children: [
+                        Icon(roleIcon,
+                            color: const Color.fromRGBO(7, 82, 96, 1)),
+                        const SizedBox(width: 12),
+                        Text(roleText),
+                      ],
+                    ),
+                    onChanged: (v) {
+                      setDialogState(() => selected = v);
+                    },
+                  );
+                }).toList(),
+              );
+            },
+          ),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(ctx),
+              child: const Text('Cancel'),
+            ),
+            FilledButton(
+              onPressed: selected != null
+                  ? () => Navigator.pop(ctx, selected)
+                  : null,
+              child: const Text('Confirm'),
+            ),
+          ],
+        );
+      },
+    );
+    return selected;
   }
 
   Future signUp() async {
@@ -985,27 +1053,79 @@ class _SignUpState extends State<SignUp> {
                       height: 55,
                       child: FilledButton.tonalIcon(
                         onPressed: () async {
-                          UserCredential userCredential =
-                              await AuthService().signInWithGoogle(context);
-                          print(userCredential.user!.email);
                           setState(() {
-                            isLoading = true;
+                            isLoadingGoogle = true;
                           });
-                          await FirebaseFirestore.instance
-                              .collection('Users')
-                              .doc(userCredential.user!.email)
-                              .set(
-                            {
+                          try {
+                            UserCredential userCredential =
+                                await AuthService().signInWithGoogle(context);
+
+                            var existing = await FirebaseFirestore.instance
+                                .collection('Users')
+                                .doc(userCredential.user!.email)
+                                .get();
+                            if (existing.exists) {
+                              await FirebaseAuth.instance.signOut();
+                              if (mounted) {
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  const SnackBar(
+                                    content: Text('Account already exists. Please sign in.'),
+                                    backgroundColor: Colors.orange,
+                                  ),
+                                );
+                                widget.showSignInScreen?.call();
+                              }
+                              return;
+                            }
+
+                            final role = await _showRoleSelectionDialog();
+                            if (role == null) {
+                              await FirebaseAuth.instance.signOut();
+                              return;
+                            }
+
+                            await FirebaseFirestore.instance
+                                .collection('Users')
+                                .doc(userCredential.user!.email)
+                                .set({
                               'name': userCredential.user!.displayName,
                               'dob': null,
                               'gender': null,
                               'nic': null,
                               'address': null,
                               'mobile': null,
-                            },
-                          );
+                              'role': role.name,
+                              'linkedFamilyEmails': [],
+                              'pendingInvitations': [],
+                              'linkedPatientsEmails': [],
+                              'pendingPatientRequests': [],
+                              'linkedDoctorEmails': [],
+                              'pendingDoctorRequests': [],
+                              'pendingDoctorInvitations': [],
+                            });
+
+                            await SharedPreferences.getInstance()
+                                .then((prefs) => prefs.setString('login_type', 'google'));
+
+                            if (mounted) {
+                              Navigator.of(context).pushReplacement(
+                                MaterialPageRoute(
+                                    builder: (context) => const MainPage()),
+                              );
+                            }
+                          } catch (e) {
+                            print(e);
+                            if (mounted) {
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                SnackBar(
+                                  content: Text('Error: $e'),
+                                  backgroundColor: Colors.red,
+                                ),
+                              );
+                            }
+                          }
                           setState(() {
-                            isLoading = false;
+                            isLoadingGoogle = false;
                           });
                         },
                         style: const ButtonStyle(

@@ -43,8 +43,5 @@ app.*.map.json
 /android/app/profile
 /android/app/release
 
-# Environment variables
-.env
-
 # Large ML dataset
 assets/models/dataset.csv

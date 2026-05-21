@@ -21,7 +21,7 @@ class _SeniorChatScreenState extends State<SeniorChatScreen> {
   double _fontSize = 20;
   String _currentLang = 'ar';
 
-  static const _openRouterKey = ApiConfig.openRouterApiKey;
+  static String get _openRouterKey => ApiConfig.openRouterApiKey;
   static const _baseUrl = ApiConfig.openRouterBaseUrl;
 
   String _getSystemPrompt(String lang) {

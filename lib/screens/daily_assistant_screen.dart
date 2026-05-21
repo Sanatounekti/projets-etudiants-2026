@@ -21,7 +21,7 @@ class _DailyAssistantScreenState extends State<DailyAssistantScreen> {
   bool _isLoading = false;
   String _currentLanguage = 'fr';
 
-  static const _openRouterKey = ApiConfig.openRouterApiKey;
+  static String get _openRouterKey => ApiConfig.openRouterApiKey;
   static const _baseUrl = ApiConfig.openRouterBaseUrl;
 
   final List<Map<String, dynamic>> _gameRecommendations = [

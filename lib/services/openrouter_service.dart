@@ -3,7 +3,7 @@ import 'package:http/http.dart' as http;
 import 'package:mymeds_app/services/api_config.dart';
 
 class OpenRouterService {
-  static const String _apiKey = ApiConfig.openRouterApiKey;
+  static String get _apiKey => ApiConfig.openRouterApiKey;
   static const String _baseUrl = ApiConfig.openRouterBaseUrl;
 
   static String _getSystemPrompt(String language) {

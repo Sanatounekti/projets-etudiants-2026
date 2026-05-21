@@ -10,7 +10,7 @@ class MCIService {
   factory MCIService() => _instance;
   MCIService._();
 
-  static const _apiKey = ApiConfig.openRouterApiKey;
+  static String get _apiKey => ApiConfig.openRouterApiKey;
   static const _baseUrl = ApiConfig.openRouterBaseUrl;
 
   Future<MCIPrediction> predictMCI({

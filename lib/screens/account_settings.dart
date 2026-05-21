@@ -109,35 +109,52 @@ class _SettingPageUIState extends State<SettingsPageUI> {
                 leading: const Icon(Icons.notifications_active_outlined),
                 title: Text(translation(context).notificationSettings),
               ),
-              SettingsTile.navigation(
-                leading: const Icon(Icons.language_rounded),
-                title: Text(translation(context).language),
-                onPressed: (BuildContext context) {
-                  showModalBottomSheet(
-                    context: context,
-                    builder: (BuildContext context) {
-                      return Container(
-                        child: Wrap(
-                          children: Language.languageList().map((language) {
-                            return ListTile(
-                              leading: Text(
-                                language.flag,
-                                style: const TextStyle(fontSize: 30),
-                              ),
-                              title: Text(language.name),
-                              onTap: () async {
-                                Locale _locale =
-                                    await setLocale(language.languageCode);
-                                MyApp.setLocale(context, _locale);
-                              },
-                            );
-                          }).toList(),
-                        ),
-                      );
-                    },
-                  );
-                },
-              ),
+               SettingsTile.navigation(
+                 leading: const Icon(Icons.language_rounded),
+                 title: Text(translation(context).language),
+                 onPressed: (BuildContext context) {
+                   String? selected =
+                       WidgetsBinding.instance.platformDispatcher.locale.languageCode;
+                   showDialog(
+                     context: context,
+                     builder: (ctx) {
+                       return AlertDialog(
+                         title: Text(translation(context).language),
+                         content: Column(
+                           mainAxisSize: MainAxisSize.min,
+                           children: Language.languageList().map((language) {
+                             return RadioListTile<String>(
+                               value: language.languageCode,
+                               groupValue: selected,
+                               title: Row(
+                                 children: [
+                                   Text(language.flag,
+                                       style: const TextStyle(fontSize: 24)),
+                                   const SizedBox(width: 12),
+                                   Text(language.name),
+                                 ],
+                               ),
+                               onChanged: (v) async {
+                                 selected = v;
+                                 Navigator.pop(ctx);
+                                 Locale locale =
+                                     await setLocale(language.languageCode);
+                                 MyApp.setLocale(context, locale);
+                               },
+                             );
+                           }).toList(),
+                         ),
+                         actions: [
+                           TextButton(
+                             onPressed: () => Navigator.pop(ctx),
+                             child: const Text('Cancel'),
+                           ),
+                         ],
+                       );
+                     },
+                   );
+                 },
+               ),
             ],
           ),
           SettingsSection(

@@ -98,9 +98,9 @@ class _SignUpState extends State<SignUp> {
                       roleText = 'Personne agee (Patient)';
                       roleIcon = Icons.elderly;
                       break;
-                    case UserRole.membreFamille:
-                      roleText = 'Membre de famille';
-                      roleIcon = Icons.family_restroom;
+                    case UserRole.assistant:
+                      roleText = 'Assistant';
+                      roleIcon = Icons.support_agent;
                       break;
                     case UserRole.doctor:
                       roleText = 'Medecin';
@@ -529,9 +529,9 @@ class _SignUpState extends State<SignUp> {
                                   roleText = 'Personne âgée (Patient)';
                                   roleIcon = '👴';
                                   break;
-                                case UserRole.membreFamille:
-                                  roleText = 'Membre de famille';
-                                  roleIcon = '👨‍👩‍👧';
+                                case UserRole.assistant:
+                                  roleText = 'Assistant';
+                                  roleIcon = '🤝';
                                   break;
                                 case UserRole.doctor:
                                   roleText = 'Médecin';

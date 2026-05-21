@@ -231,7 +231,7 @@ class _FamilyLinksScreenState extends State<FamilyLinksScreen> {
       }
 
       final targetData = targetDoc.data() as Map<String, dynamic>;
-      if (targetData['role'] != 'membreFamille') {
+      if (targetData['role'] != 'assistant' && targetData['role'] != 'membreFamille') {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(content: Text(t.requestFailed)),
         );

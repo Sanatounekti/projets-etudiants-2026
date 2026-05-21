@@ -1,6 +1,6 @@
 enum UserRole {
   personneAge,
-  membreFamille,
+  assistant,
   doctor,
 }
 

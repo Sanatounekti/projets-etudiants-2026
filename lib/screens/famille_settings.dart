@@ -40,7 +40,7 @@ class FamilleSettings extends StatelessWidget {
                   ),
                 ),
                 Text(
-                  'Membre de famille',
+                  'Assistant',
                   style: GoogleFonts.roboto(
                     fontSize: 14,
                     color: Colors.grey[600],

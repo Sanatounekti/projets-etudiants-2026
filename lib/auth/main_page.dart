@@ -95,6 +95,7 @@ class _MainPageState extends State<MainPage> {
               final role = data['role'] as String? ?? 'personneAge';
 
               switch (role) {
+                case 'assistant':
                 case 'membreFamille':
                   return const DashboardFamille();
                 case 'doctor':
@@ -134,6 +135,7 @@ class _MainPageState extends State<MainPage> {
           final role = data['role'] as String? ?? 'personneAge';
 
           switch (role) {
+            case 'assistant':
             case 'membreFamille':
               return const DashboardFamille();
             case 'doctor':

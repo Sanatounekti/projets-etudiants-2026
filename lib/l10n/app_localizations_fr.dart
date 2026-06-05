@@ -829,19 +829,19 @@ class AppLocalizationsFr extends AppLocalizations {
   String get myLinks => 'Mes liens';
 
   @override
-  String get familyMembers => 'Membres de la famille';
+  String get familyMembers => 'Assistants';
 
   @override
   String get myDoctors => 'Mes médecins';
 
   @override
-  String get noFamilyMembers => 'Aucun membre de la famille lié';
+  String get noFamilyMembers => 'Aucun assistant lié';
 
   @override
   String get noDoctors => 'Aucun médecin lié';
 
   @override
-  String get inviteFamily => 'Inviter un membre de la famille';
+  String get inviteFamily => 'Inviter un assistant';
 
   @override
   String get doctorRequests => 'Demandes de médecin';
@@ -1033,7 +1033,7 @@ class AppLocalizationsFr extends AppLocalizations {
   String get doctorSpace => 'Espace Médecin';
 
   @override
-  String get familySpace => 'Espace Famille';
+  String get familySpace => 'Espace Assistant';
 
   @override
   String get patients => 'Patients';

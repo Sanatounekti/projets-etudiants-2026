@@ -1,4 +1,5 @@
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:flutter/material.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 
@@ -9,9 +10,9 @@ class AuthService {
     scopes: ['email', 'profile'],
   );
 
-  Future<UserCredential> signInWithGoogle(BuildContext context) async {
+  Future<OAuthCredential?> getGoogleCredential(BuildContext context) async {
     try {
-      if (!context.mounted) return Future.error(Exception('Context disposed'));
+      if (!context.mounted) return null;
 
       showDialog(
         context: context,
@@ -28,7 +29,7 @@ class AuthService {
 
       if (googleUser == null) {
         if (context.mounted) Navigator.of(context).pop();
-        return Future.error(Exception('Google Sign-In cancelled'));
+        return null;
       }
 
       final GoogleSignInAuthentication googleAuth =
@@ -39,14 +40,11 @@ class AuthService {
         idToken: googleAuth.idToken,
       );
 
-      final UserCredential result =
-          await FirebaseAuth.instance.signInWithCredential(credential);
-
       if (context.mounted) {
         Navigator.of(context).pop();
       }
 
-      return result;
+      return credential;
     } catch (e) {
       if (context.mounted && Navigator.canPop(context)) {
         Navigator.of(context).pop();
@@ -66,7 +64,30 @@ class AuthService {
           ),
         );
       }
-      rethrow;
+      return null;
     }
+  }
+
+  Future<UserCredential> signInWithCredential(
+      OAuthCredential credential) async {
+    return FirebaseAuth.instance.signInWithCredential(credential);
+  }
+
+  Future<UserCredential> signInWithGoogle(BuildContext context) async {
+    if (kIsWeb) {
+      // Use Firebase Auth popup for web
+      final provider = GoogleAuthProvider();
+      provider.addScope('email');
+      provider.addScope('profile');
+      // Optional: force account selection
+      provider.setCustomParameters({'prompt': 'select_account'});
+      return await FirebaseAuth.instance.signInWithPopup(provider);
+    }
+
+    final credential = await getGoogleCredential(context);
+    if (credential == null) {
+      return Future.error(Exception('Google Sign-In cancelled'));
+    }
+    return FirebaseAuth.instance.signInWithCredential(credential);
   }
 }

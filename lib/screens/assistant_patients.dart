@@ -6,14 +6,14 @@ import 'package:mymeds_app/components/language_constants.dart';
 import 'package:mymeds_app/screens/add_medication1.dart';
 import 'package:mymeds_app/screens/incident_report.dart';
 
-class FamillePatients extends StatefulWidget {
-  const FamillePatients({super.key});
+class AssistantPatients extends StatefulWidget {
+  const AssistantPatients({super.key});
 
   @override
-  State<FamillePatients> createState() => _FamillePatientsState();
+  State<AssistantPatients> createState() => _AssistantPatientsState();
 }
 
-class _FamillePatientsState extends State<FamillePatients> {
+class _AssistantPatientsState extends State<AssistantPatients> {
   final user = FirebaseAuth.instance.currentUser;
   List<Map<String, dynamic>> _patients = [];
   List<Map<String, dynamic>> _pendingRequests = [];

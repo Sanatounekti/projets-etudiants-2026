@@ -6,7 +6,7 @@ import 'package:mymeds_app/services/biometric_auth_service.dart';
 import 'package:mymeds_app/services/session_timeout_service.dart';
 
 import 'package:mymeds_app/screens/dashboard_patient.dart';
-import 'package:mymeds_app/screens/dashboard_famille.dart';
+import 'package:mymeds_app/screens/dashboard_assistant.dart';
 import 'package:mymeds_app/screens/dashboard_doctor.dart';
 import 'package:mymeds_app/screens/email_verify.dart';
 
@@ -97,7 +97,7 @@ class _MainPageState extends State<MainPage> {
               switch (role) {
                 case 'assistant':
                 case 'membreFamille':
-                  return const DashboardFamille();
+                  return const DashboardAssistant();
                 case 'doctor':
                   return const DashboardDoctor();
                 case 'personneAge':
@@ -120,9 +120,9 @@ class _MainPageState extends State<MainPage> {
       return const DashboardPatient();
     }
 
-    return FutureBuilder<DocumentSnapshot>(
-      future:
-          FirebaseFirestore.instance.collection('Users').doc(user.email).get(),
+    return StreamBuilder<DocumentSnapshot>(
+      stream:
+          FirebaseFirestore.instance.collection('Users').doc(user.email).snapshots(),
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
           return const Scaffold(
@@ -137,7 +137,7 @@ class _MainPageState extends State<MainPage> {
           switch (role) {
             case 'assistant':
             case 'membreFamille':
-              return const DashboardFamille();
+              return const DashboardAssistant();
             case 'doctor':
               return const DashboardDoctor();
             case 'personneAge':
@@ -146,7 +146,9 @@ class _MainPageState extends State<MainPage> {
           }
         }
 
-        return const DashboardPatient();
+        return const Scaffold(
+          body: Center(child: CircularProgressIndicator()),
+        );
       },
     );
   }

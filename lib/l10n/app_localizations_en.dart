@@ -817,19 +817,19 @@ class AppLocalizationsEn extends AppLocalizations {
   String get myLinks => 'My Links';
 
   @override
-  String get familyMembers => 'Family Members';
+  String get familyMembers => 'Assistant Members';
 
   @override
   String get myDoctors => 'My Doctors';
 
   @override
-  String get noFamilyMembers => 'No family members linked';
+  String get noFamilyMembers => 'No assistants linked';
 
   @override
   String get noDoctors => 'No doctors linked';
 
   @override
-  String get inviteFamily => 'Invite Family Member';
+  String get inviteFamily => 'Invite Assistant';
 
   @override
   String get doctorRequests => 'Doctor Requests';
@@ -1021,7 +1021,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get doctorSpace => 'Doctor Space';
 
   @override
-  String get familySpace => 'Family Space';
+  String get familySpace => 'Assistant Space';
 
   @override
   String get patients => 'Patients';

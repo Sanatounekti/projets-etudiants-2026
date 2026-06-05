@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:mymeds_app/components/autonomy_score_widget.dart';
 import 'package:mymeds_app/screens/create_prescription_screen.dart';
-import 'package:mymeds_app/screens/senior_chat_screen.dart';
 
 class DoctorHome extends StatefulWidget {
   const DoctorHome({super.key});
@@ -268,12 +267,7 @@ class _DoctorHomeState extends State<DoctorHome> {
             _showRecommendationDialog();
           }),
         ),
-        const SizedBox(width: 8),
-        Expanded(
-          child: _buildActionCard(Icons.chat, 'Assistant\nRafiq', const Color(0xFF6A1B9A), () {
-            Navigator.push(context, MaterialPageRoute(builder: (_) => const SeniorChatScreen()));
-          }),
-        ),
+
       ],
     );
   }

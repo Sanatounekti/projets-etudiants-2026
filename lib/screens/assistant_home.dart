@@ -7,14 +7,14 @@ import 'package:mymeds_app/screens/add_medication1.dart';
 import 'package:mymeds_app/screens/daily_activities_screen.dart';
 import 'package:mymeds_app/screens/incident_report.dart';
 
-class FamilleHome extends StatefulWidget {
-  const FamilleHome({super.key});
+class AssistantHome extends StatefulWidget {
+  const AssistantHome({super.key});
 
   @override
-  State<FamilleHome> createState() => _FamilleHomeState();
+  State<AssistantHome> createState() => _AssistantHomeState();
 }
 
-class _FamilleHomeState extends State<FamilleHome> {
+class _AssistantHomeState extends State<AssistantHome> {
   final user = FirebaseAuth.instance.currentUser;
   List<Map<String, dynamic>> _patients = [];
   List<Map<String, dynamic>> _reminders = [];
@@ -143,7 +143,7 @@ class _FamilleHomeState extends State<FamilleHome> {
       backgroundColor: Colors.grey[50],
       appBar: AppBar(
         title: Text(
-          '${_getGreeting()}, ${user?.displayName ?? 'Famille'}',
+          '${_getGreeting()}, ${user?.displayName ?? 'Assistant'}',
           style: GoogleFonts.poppins(fontSize: 16, fontWeight: FontWeight.w600, color: const Color.fromRGBO(7, 82, 96, 1)),
         ),
         backgroundColor: Colors.white,

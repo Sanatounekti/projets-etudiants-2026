@@ -1699,7 +1699,7 @@ abstract class AppLocalizations {
   /// No description provided for @familyMembers.
   ///
   /// In en, this message translates to:
-  /// **'Family Members'**
+  /// **'Assistant Members'**
   String get familyMembers;
 
   /// No description provided for @myDoctors.
@@ -1711,7 +1711,7 @@ abstract class AppLocalizations {
   /// No description provided for @noFamilyMembers.
   ///
   /// In en, this message translates to:
-  /// **'No family members linked'**
+  /// **'No assistants linked'**
   String get noFamilyMembers;
 
   /// No description provided for @noDoctors.
@@ -1723,7 +1723,7 @@ abstract class AppLocalizations {
   /// No description provided for @inviteFamily.
   ///
   /// In en, this message translates to:
-  /// **'Invite Family Member'**
+  /// **'Invite Assistant'**
   String get inviteFamily;
 
   /// No description provided for @doctorRequests.
@@ -2101,7 +2101,7 @@ abstract class AppLocalizations {
   /// No description provided for @familySpace.
   ///
   /// In en, this message translates to:
-  /// **'Family Space'**
+  /// **'Assistant Space'**
   String get familySpace;
 
   /// No description provided for @patients.

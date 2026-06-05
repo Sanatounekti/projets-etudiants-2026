@@ -8,19 +8,19 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:mymeds_app/screens/alarm_ring.dart';
 import 'package:mymeds_app/screens/daily_encouragement_dialog.dart';
-import 'package:mymeds_app/screens/famille_home.dart';
-import 'package:mymeds_app/screens/famille_patients.dart';
-import 'package:mymeds_app/screens/famille_settings.dart';
+import 'package:mymeds_app/screens/assistant_home.dart';
+import 'package:mymeds_app/screens/assistant_patients.dart';
+import 'package:mymeds_app/screens/assistant_settings.dart';
 import 'package:mymeds_app/screens/statistic.dart';
 
-class DashboardFamille extends StatefulWidget {
-  const DashboardFamille({super.key});
+class DashboardAssistant extends StatefulWidget {
+  const DashboardAssistant({super.key});
 
   @override
-  State<DashboardFamille> createState() => _DashboardFamilleState();
+  State<DashboardAssistant> createState() => _DashboardAssistantState();
 }
 
-class _DashboardFamilleState extends State<DashboardFamille> {
+class _DashboardAssistantState extends State<DashboardAssistant> {
   final user = FirebaseAuth.instance.currentUser;
 
   int _selectedIndex = 0;
@@ -71,16 +71,16 @@ class _DashboardFamilleState extends State<DashboardFamille> {
   @override
   Widget build(BuildContext context) {
     final List<Widget> pages = <Widget>[
-      const FamilleHome(),
-      const FamillePatients(),
+      const AssistantHome(),
+      const AssistantPatients(),
       const Statistic(),
-      const FamilleSettings(),
+      const AssistantSettings(),
     ];
 
     return Scaffold(
       appBar: AppBar(
         title: Text(
-          'Espace Famille',
+          'Espace Assistant',
           style: GoogleFonts.poppins(
             color: const Color.fromRGBO(7, 82, 96, 1),
             fontWeight: FontWeight.w600,

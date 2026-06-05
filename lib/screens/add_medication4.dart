@@ -9,7 +9,7 @@ import 'package:mymeds_app/components/category_model.dart';
 import 'package:mymeds_app/components/controller_data.dart';
 import 'package:mymeds_app/components/language_constants.dart';
 import 'package:mymeds_app/screens/dashboard.dart';
-import 'package:mymeds_app/screens/dashboard_famille.dart';
+import 'package:mymeds_app/screens/dashboard_assistant.dart';
 import 'package:mymeds_app/services/alarm_mapping_service.dart';
 import 'package:permission_handler/permission_handler.dart';
 
@@ -29,7 +29,7 @@ class _AddMedication4State extends State<AddMedication4> {
   final _formKey = GlobalKey<FormState>();
 
   /// L'email de l'utilisateur pour qui on ajoute le médicament
-  /// Si targetUserEmail est fourni, c'est un membre de famille qui ajoute pour un patient
+  /// Si targetUserEmail est fourni, c'est un assistant qui ajoute pour un patient
   String get _targetEmail => widget.targetUserEmail ?? currentUser!.email!;
 
   TextEditingController medname =
@@ -551,11 +551,11 @@ class _AddMedication4State extends State<AddMedication4> {
 
       //navigate to appropriate dashboard
       if (widget.targetUserEmail != null) {
-        // Membre de famille : retourner à DashboardFamille
+        // Assistant : retourner à DashboardAssistant
         Navigator.pushAndRemoveUntil(
           context,
           MaterialPageRoute(
-            builder: (context) => const DashboardFamille(),
+            builder: (context) => const DashboardAssistant(),
           ),
           (route) => false,
         );

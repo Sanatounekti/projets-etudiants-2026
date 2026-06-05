@@ -4,8 +4,8 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:mymeds_app/screens/account_settings.dart';
 import 'package:mymeds_app/screens/emergency.dart';
 
-class FamilleSettings extends StatelessWidget {
-  const FamilleSettings({super.key});
+class AssistantSettings extends StatelessWidget {
+  const AssistantSettings({super.key});
 
   @override
   Widget build(BuildContext context) {

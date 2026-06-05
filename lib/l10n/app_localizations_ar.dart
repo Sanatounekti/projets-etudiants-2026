@@ -812,19 +812,19 @@ class AppLocalizationsAr extends AppLocalizations {
   String get myLinks => 'روابطي';
 
   @override
-  String get familyMembers => 'أفراد العائلة';
+  String get familyMembers => 'المساعدين';
 
   @override
   String get myDoctors => 'أطبائي';
 
   @override
-  String get noFamilyMembers => 'لا يوجد أفراد عائلة مرتبطون';
+  String get noFamilyMembers => 'لا يوجد مساعدين مرتبطون';
 
   @override
   String get noDoctors => 'لا يوجد أطباء مرتبطون';
 
   @override
-  String get inviteFamily => 'دعوة فرد من العائلة';
+  String get inviteFamily => 'دعوة مساعد';
 
   @override
   String get doctorRequests => 'طلبات الأطباء';
@@ -1013,7 +1013,7 @@ class AppLocalizationsAr extends AppLocalizations {
   String get doctorSpace => 'مساحة الطبيب';
 
   @override
-  String get familySpace => 'مساحة العائلة';
+  String get familySpace => 'مساحة المساعد';
 
   @override
   String get patients => 'المرضى';

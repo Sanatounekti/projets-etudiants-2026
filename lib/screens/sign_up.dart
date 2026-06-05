@@ -81,67 +81,78 @@ class _SignUpState extends State<SignUp> {
 
   Future<UserRole?> _showRoleSelectionDialog() async {
     UserRole? selected;
-    await showDialog<UserRole>(
+    return await showDialog<UserRole>(
       context: context,
+      barrierDismissible: false,
       builder: (ctx) {
-        return AlertDialog(
-          title: const Text('Select your role'),
-          content: StatefulBuilder(
-            builder: (context, setDialogState) {
-              return Column(
-                mainAxisSize: MainAxisSize.min,
-                children: UserRole.values.map((role) {
-                  String roleText;
-                  IconData roleIcon;
-                  switch (role) {
-                    case UserRole.personneAge:
-                      roleText = 'Personne agee (Patient)';
-                      roleIcon = Icons.elderly;
-                      break;
-                    case UserRole.assistant:
-                      roleText = 'Assistant';
-                      roleIcon = Icons.support_agent;
-                      break;
-                    case UserRole.doctor:
-                      roleText = 'Medecin';
-                      roleIcon = Icons.medical_services;
-                      break;
-                  }
-                  return RadioListTile<UserRole>(
-                    value: role,
-                    groupValue: selected,
-                    title: Row(
-                      children: [
-                        Icon(roleIcon,
-                            color: const Color.fromRGBO(7, 82, 96, 1)),
-                        const SizedBox(width: 12),
-                        Text(roleText),
-                      ],
-                    ),
-                    onChanged: (v) {
-                      setDialogState(() => selected = v);
-                    },
-                  );
-                }).toList(),
-              );
-            },
-          ),
-          actions: [
-            TextButton(
-              onPressed: () => Navigator.pop(ctx),
-              child: const Text('Cancel'),
-            ),
-            FilledButton(
-              onPressed: selected != null
-                  ? () => Navigator.pop(ctx, selected)
-                  : null,
-              child: const Text('Confirm'),
-            ),
-          ],
+        return StatefulBuilder(
+          builder: (context, setDialogState) {
+            return PopScope(
+              canPop: false,
+              child: AlertDialog(
+                title: const Text('Select your role'),
+                content: SingleChildScrollView(
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: UserRole.values.map((role) {
+                      String roleText;
+                      IconData roleIcon;
+                      switch (role) {
+                        case UserRole.personneAge:
+                          roleText = 'Patient';
+                          roleIcon = Icons.elderly;
+                          break;
+                        case UserRole.assistant:
+                          roleText = 'Assistant';
+                          roleIcon = Icons.support_agent;
+                          break;
+                        case UserRole.doctor:
+                          roleText = 'Medecin';
+                          roleIcon = Icons.medical_services;
+                          break;
+                      }
+                      return RadioListTile<UserRole>(
+                        value: role,
+                        groupValue: selected,
+                        title: Row(
+                          children: [
+                            Icon(roleIcon,
+                                color: const Color.fromRGBO(7, 82, 96, 1)),
+                            const SizedBox(width: 12),
+                            Flexible(
+                              child: Text(
+                                roleText,
+                                overflow: TextOverflow.ellipsis,
+                                softWrap: false,
+                              ),
+                            ),
+                          ],
+                        ),
+                        onChanged: (v) {
+                          setDialogState(() => selected = v);
+                        },
+                      );
+                    }).toList(),
+                  ),
+                ),
+                actions: [
+                  TextButton(
+                    onPressed: () => Navigator.pop(ctx, null),
+                    child: const Text('Cancel'),
+                  ),
+                  FilledButton(
+                    onPressed: selected != null
+                        ? () => Navigator.pop(ctx, selected)
+                        : null,
+                    child: const Text('Confirm'),
+                  ),
+                ],
+              ),
+            );
+          },
         );
       },
     );
-    return selected;
   }
 
   Future signUp() async {
@@ -1057,6 +1068,14 @@ class _SignUpState extends State<SignUp> {
                             isLoadingGoogle = true;
                           });
                           try {
+                            final role = await _showRoleSelectionDialog();
+                            if (role == null) {
+                              setState(() {
+                                isLoadingGoogle = false;
+                              });
+                              return;
+                            }
+
                             UserCredential userCredential =
                                 await AuthService().signInWithGoogle(context);
 
@@ -1075,12 +1094,6 @@ class _SignUpState extends State<SignUp> {
                                 );
                                 widget.showSignInScreen?.call();
                               }
-                              return;
-                            }
-
-                            final role = await _showRoleSelectionDialog();
-                            if (role == null) {
-                              await FirebaseAuth.instance.signOut();
                               return;
                             }
 

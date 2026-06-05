@@ -56,7 +56,7 @@ class _Emergency extends State<Emergency> {
             const SizedBox(height: 40),
             _EmergencyButton(
               onPressed: () => _makeEmergencyCall("190"),
-              icon: FontAwesomeIcons.truckMedical,
+              icon: Icons.medical_services_outlined,
               label: 'SAMU (Ambulance)',
               number: '190',
             ),
@@ -86,7 +86,7 @@ class _Emergency extends State<Emergency> {
             ),
             _EmergencyButton(
               onPressed: () => _makeEmergencyCall("192"),
-              icon: FontAwesomeIcons.ship,
+              icon: Icons.directions_boat,
               label: 'Secours en Mer',
               number: '192',
             ),

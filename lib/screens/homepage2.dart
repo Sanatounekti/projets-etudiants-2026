@@ -54,6 +54,22 @@ class _HomePage2State extends State<HomePage2> {
     });
   }
 
+  String _formatWeekday(CalendarDateTime date) {
+    final dt = DateTime(date.year, date.month, date.day);
+    final weekdays = [
+      'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'
+    ];
+    return weekdays[dt.weekday - 1];
+  }
+
+  String _formatDate(CalendarDateTime date) {
+    final months = [
+      'January', 'February', 'March', 'April', 'May', 'June',
+      'July', 'August', 'September', 'October', 'November', 'December'
+    ];
+    return '${months[date.month - 1]} ${date.day}, ${date.year}';
+  }
+
   /// Vérifie et demande la permission pour les alarmes exactes (Android 12+)
   Future<bool> _checkAlarmPermission() async {
     if (!Platform.isAndroid) return true;
@@ -572,26 +588,61 @@ class _HomePage2State extends State<HomePage2> {
                   crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: [
                     //title
-                    Text(
-                      _selectedDate.value.toString().substring(0, 10),
-                      style: GoogleFonts.roboto(
-                        fontSize: 28,
-                        fontWeight: FontWeight.w700,
-                      ),
+                    Row(
+                      children: [
+                        Expanded(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                _formatWeekday(_selectedDate.value),
+                                style: GoogleFonts.roboto(
+                                  fontSize: 15,
+                                  fontWeight: FontWeight.w500,
+                                  color: const Color.fromARGB(255, 100, 100, 100),
+                                ),
+                              ),
+                              const SizedBox(height: 2),
+                              Text(
+                                _formatDate(_selectedDate.value),
+                                style: GoogleFonts.roboto(
+                                  fontSize: 28,
+                                  fontWeight: FontWeight.w700,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                        if (docIds.isNotEmpty)
+                          Container(
+                            padding: const EdgeInsets.symmetric(
+                                horizontal: 14, vertical: 8),
+                            decoration: BoxDecoration(
+                              color: const Color.fromARGB(255, 241, 250, 251),
+                              borderRadius: BorderRadius.circular(20),
+                            ),
+                            child: Row(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                Icon(Icons.medication_outlined,
+                                    size: 18,
+                                    color: Theme.of(context).colorScheme.primary),
+                                const SizedBox(width: 6),
+                                Text(
+                                  '${docIds.length}',
+                                  style: GoogleFonts.roboto(
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.w700,
+                                    color: Theme.of(context).colorScheme.primary,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                      ],
                     ),
                     const SizedBox(
                       height: 5,
-                    ),
-                    //reminder text
-                    // Text(
-                    //   'You currently have no reminders',
-                    //   style: GoogleFonts.roboto(
-                    //     fontSize: 15,
-                    //     fontWeight: FontWeight.w400,
-                    //   ),
-                    // ),
-                    const SizedBox(
-                      height: 10,
                     ),
                     // TextButton(
                     //   onPressed: () async {
